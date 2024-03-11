@@ -8,6 +8,5 @@ export async function POST(request){
   const newUser = await db.user.create({
     data
   })
-
   return NextResponse.json(newUser)
 }
