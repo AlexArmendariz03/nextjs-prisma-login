@@ -1,12 +1,21 @@
 "use client"
 import {useForm} from "react-hook-form";
+import {POST} from "@/app/api/auth/register/route";
 
 export default function RegisterPage() {
 
   const{register,handleSubmit,formState:{errors}} = useForm()
 
-  const onSubmit = handleSubmit(data => {
-    console.log(data)
+  const onSubmit = handleSubmit(async (data) => {
+    const res = await fetch("/api/auth/register",{
+      method:"POST",
+      body: JSON.stringify(data),
+      headers:{
+        "Content-Type" : "application/json"
+      }
+    })
+    const resJSON =  await res.json()
+    console.log(resJSON)
   })
 
   console.log(errors)
@@ -59,7 +68,7 @@ export default function RegisterPage() {
               message:"Ingresa tu contraseña"
             }})}
                className="p-3 rounded block mb-2 bg-slate-900 text-slate-300 w-full"
-        placeholder="Añade #$%&"/>
+        placeholder="******"/>
         {errors.password && (
           <span className="text-red-500">{errors.password.message}</span>
         )}
@@ -67,13 +76,14 @@ export default function RegisterPage() {
           Confirmar contraseña:
         </label>
         <input
-          type="confirmPassword"
+          type="password"
           {...register("confirmPassword",{
             required:{
               value:true,
               message:"Se require confirmación"
             }})}
-          className="p-3 rounded block mb-2 bg-slate-900 text-slate-300 w-full"/>
+          className="p-3 rounded block mb-2 bg-slate-900 text-slate-300 w-full"
+          placeholder="******"/>
         {errors.confirmPassword && (
           <span className="text-red-500">{errors.confirmPassword.message}</span>
         )}
