@@ -1,6 +1,6 @@
-import { PrismaClient } from '@prisma/client/edge'
-import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
-const prismaClientSingleton= () =>{
+import { PrismaClient } from '@prisma/client'
+
+const prismaClientSingleton = () =>{
   return new PrismaClient()
 };
 

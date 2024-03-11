@@ -7,16 +7,27 @@ export default function RegisterPage() {
   const{register,handleSubmit,formState:{errors}} = useForm()
 
   const onSubmit = handleSubmit(async (data) => {
-    const res = await fetch("/api/auth/register",{
-      method:"POST",
-      body: JSON.stringify(data),
-      headers:{
-        "Content-Type" : "application/json"
+    if (data.password !== data.confirmPassword) {
+      alert("Las contraseñas no coinciden");
+      return;
+    }
+
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      body: JSON.stringify({
+        username: data.username,
+        email: data.email,
+        password: data.password
+      }),
+      headers: {
+        "Content-Type": "application/json"
       }
-    })
-    const resJSON =  await res.json()
-    console.log(resJSON)
-  })
+    });
+
+    const resJSON = await res.json();
+    console.log(resJSON);
+  });
+
 
   console.log(errors)
 
