@@ -28,9 +28,6 @@ export default function RegisterPage() {
     console.log(resJSON);
   });
 
-
-  console.log(errors)
-
   return (
     <div className="h-[calc(100vh-7rem)] flex justify-center items-center">
       <form  onSubmit={onSubmit} className="w-1/4">
