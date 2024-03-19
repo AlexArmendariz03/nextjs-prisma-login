@@ -1,49 +1,57 @@
-import {NextResponse} from "next/server";
-import bcrypt from 'bcryptjs'
-import db from "@/lib/db"
+import { NextResponse } from "next/server";
+import bcrypt from 'bcryptjs';
+import db from "@/lib/db";
 
-export async function POST(request){
-  const data = await request.json()
+export async function POST(request) {
+  try {
+    const data = await request.json();
 
-  const userFound = await db.user.findUnique({
-    where :{
-      email: data.email
+    const userFound = await db.user.findUnique({
+      where: {
+        email: data.email
+      }
+    });
+
+    if (userFound) {
+      return NextResponse.json({
+        message: "El email ya existe"
+      }, {
+        status: 400
+      });
     }
-  })
 
-  if(userFound){
+    const usernameFound = await db.user.findUnique({
+      where: {
+        username: data.username
+      }
+    });
+
+    if (usernameFound) {
+      return NextResponse.json({
+        message: "El usuario ya existe"
+      }, {
+        status: 400
+      });
+    }
+
+    console.log(data);
+    const hashPassword = await bcrypt.hash(data.password, 10);
+    const newUser = await db.user.create({
+      data: {
+        username: data.username,
+        email: data.email,
+        password: hashPassword
+      }
+    });
+
+    const { password: _, ...user } = newUser;
+
+    return NextResponse.json(user);
+  } catch (error) {
     return NextResponse.json({
-      message:"El email ya existe"
-    },{
-      status: 400
-    })
+      message: error.message
+    }, {
+      status: 500,
+    });
   }
-
-  const usernameFound = await db.user.findUnique({
-    where :{
-      username: data.username
-    }
-  })
-
-  if(usernameFound){
-    return NextResponse.json({
-      message:"El usuario ya existe"
-    },{
-      status: 400
-    })
-  }
-
-  console.log(data)
-  const hashPassword = await bcrypt.hash(data.password,10)
-  const newUser = await db.user.create({
-    data: {
-      username: data.username,
-      email: data.email,
-      password: hashPassword
-    }
-  })
-
-  const {password: _, ...user} = newUser
-
-  return NextResponse.json(user)
 }

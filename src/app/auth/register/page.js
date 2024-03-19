@@ -1,10 +1,12 @@
 "use client"
 import {useForm} from "react-hook-form";
 import {POST} from "@/app/api/auth/register/route";
+import {useRouter} from "next/navigation";
 
 export default function RegisterPage() {
 
   const{register,handleSubmit,formState:{errors}} = useForm()
+  const router = useRouter()
 
   const onSubmit = handleSubmit(async (data) => {
     if (data.password !== data.confirmPassword) {
@@ -24,8 +26,10 @@ export default function RegisterPage() {
       }
     });
 
-    const resJSON = await res.json();
-    console.log(resJSON);
+    if (res.ok){
+      router.push("/auth/login")
+    }
+    console.log(errors);
   });
 
   return (
