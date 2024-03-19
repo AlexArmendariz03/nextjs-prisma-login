@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import db from "@/lib/db"
+import bcrypt from "bcryptjs";
 
 const authOptions = {
   providers: [
@@ -21,6 +22,16 @@ const authOptions = {
 
          if(!userFound)  return null
          console.log(userFound)
+
+       const matchPassword =  await bcrypt.compare(credentials.password , userFound.password)
+
+         if (!matchPassword) return null
+
+         return{
+           id: userFound.id,
+           name: userFound.username,
+           email: userFound.email
+         }
       }
     })
   ]
