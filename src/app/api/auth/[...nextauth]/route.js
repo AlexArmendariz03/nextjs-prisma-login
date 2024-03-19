@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import db from "@/lib/db"
 import bcrypt from "bcryptjs";
 
+
 const authOptions = {
   providers: [
     CredentialsProvider({
@@ -20,12 +21,12 @@ const authOptions = {
           }
         })
 
-         if(!userFound)  return null
+         if(!userFound)  throw new Error("No existe el usuario")
          console.log(userFound)
 
        const matchPassword =  await bcrypt.compare(credentials.password , userFound.password)
 
-         if (!matchPassword) return null
+         if (!matchPassword) throw new Error("Error en la contraseña")
 
          return{
            id: userFound.id,
