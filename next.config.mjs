@@ -1,11 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    appDir:true,
-  },
-  webpack:(config) => {
-    config.externals = [...config.externals]
-    return config
+  webpack: (config, { isServer }) => {
+    config.externals = config.externals || [];
+    if (isServer) {
+      config.externals.push(
+        /^(pg|sqlite3|sequelize)$/
+      );
+    }
+    return config;
   }
 };
 
