@@ -20,6 +20,7 @@ function LoginPage() {
       alert(res.error);
     } else {
       router.push("/dashboard ")
+      router.refresh()
     }
   })
 
